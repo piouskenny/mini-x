@@ -17,7 +17,7 @@ Route::get('/v1', function () {
  */
 Route::prefix('/v1/user')->group(
     function () {
-        Route::get('/signup', [\App\Http\Controllers\Api\V1\User\AuthController::class, 'signup']);
+        Route::post('/signup', [\App\Http\Controllers\Api\V1\User\AuthController::class, 'signup']);
     }
 );
 
