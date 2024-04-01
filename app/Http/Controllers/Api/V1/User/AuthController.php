@@ -13,8 +13,9 @@ use Mockery\Exception;
 
 class AuthController extends Controller
 {
-    private UserRepositoryInterface $userRepositoryInterface;
-
+    public function __construct(protected UserRepositoryInterface $userRepositoryInterface)
+    {
+    }
     public function signup(UserSignupRequest $request)
     {
         $userDetails = [
@@ -28,7 +29,7 @@ class AuthController extends Controller
             $user =  $this->userRepositoryInterface->signup($userDetails);
             DB::commit();
 
-            return ApiResponseClass::sendResponse(new UserResource($user),'Product Create Successful',201);
+            return ApiResponseClass::sendResponse(new UserResource($user),'Account Create Successful',201);
         } catch (\Exception $e) {
             return ApiResponseClass::rollback($e);
         }
