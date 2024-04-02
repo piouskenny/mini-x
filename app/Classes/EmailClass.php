@@ -13,7 +13,7 @@ class EmailClass
     public function __construct($otp, $recipientMail)
     {
         $title = 'OTP Verification For Mini X';
-        $body = `Your OTP is $otp </br> Thank you for signup to Mini X, Please Contact us if you did not initiate this process.!`;
+        $body = "Your OTP is $otp Thank you for signup to Mini X, Please Contact us if you did not initiate this process.!";
 
         $mail = Mail::to($recipientMail)->send(new OTPMail($title, $body));
 
