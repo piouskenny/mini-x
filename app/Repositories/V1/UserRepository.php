@@ -2,6 +2,7 @@
 
 namespace App\Repositories\V1;
 
+use App\Classes\ApiResponseClass;
 use App\Models\OTP;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -40,18 +41,30 @@ class UserRepository implements UserRepositoryInterface
         return $user;
     }
 
-    public function verifyEmail(array $data)
+    public function verifyEmail(int $user_id, int $otp)
     {
-        $user = User::find($data->id);
+        $user = User::find($user_id)->first();
 
         if ($user) {
+
             /**
-             * Update the user's email_verified_at timestamp
+             * Check if the OTP matches the user OTP in the OTP table
              * */
-            $user->email_verified_at = now();
-            $user->save();
-            return true;
-        }
+            $storedOTP = OTP::where('user_id', $user_id)->first();
+
+
+            if($storedOTP->otp !== $otp) {
+               return false;
+            }
+
+            $storedOTP->delete();
+
+            $user->update([
+                'verificationStatus' => true
+            ]);
+
+            return $user;
+         }
         return false;
     }
 

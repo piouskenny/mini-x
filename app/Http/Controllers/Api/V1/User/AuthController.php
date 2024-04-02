@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\User;
 
 use App\Classes\ApiResponseClass;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\V1\OTPRequest;
 use App\Http\Requests\V1\UserSignupRequest;
 use App\Http\Resources\V1\UserResource;
 use Illuminate\Http\Request;
@@ -36,8 +37,22 @@ class AuthController extends Controller
         }
     }
 
-    public function verifyEmail()
+    public function verifyEmail(OTPRequest $request)
     {
+        $userDetails = [
+            'user_id' => $request->user_id,
+            'otp' => $request->otp
+        ];
+
+        DB::beginTransaction();
+        try {
+            $verify = $this->userRepositoryInterface->verifyEmail($userDetails['user_id'], $userDetails['otp'] );
+            DB::commit();
+
+            return ApiResponseClass::sendResponse(new UserResource($verify), 'Your Email has been verified ', 200);
+        } catch (\Exception $e) {
+            return ApiResponseClass::rollback($e, 'Check your OTP and retry again');
+        }
 
     }
 }

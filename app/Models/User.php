@@ -22,6 +22,7 @@ class User extends Authenticatable
         'followers',
         'posts',
         'email',
+        'verificationStatus',
         'password',
     ];
 
