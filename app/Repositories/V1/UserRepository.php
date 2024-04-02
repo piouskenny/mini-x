@@ -10,6 +10,8 @@ use Laravel\Sanctum\Contracts\HasApiTokens;
 use Illuminate\Http\Request;
 use App\Interfaces\V1\UserRepositoryInterface;
 use App\Classes\EmailClass;
+
+
 class UserRepository implements UserRepositoryInterface
 {
 
@@ -70,12 +72,17 @@ class UserRepository implements UserRepositoryInterface
 
     public function login(array $data)
     {
+
         if (Auth::attempt(['email' => $data['email'], 'password' => $data['password']])) {
             $user = Auth::user();
+
+
             $token = $user->createToken('Token')->plainTextToken;
-            return ['token' => $token];
+            $user['token'] = $token;
+
+            return $user;
         }
-        return ['error' => 'Unauthorized'];
+        return false;
     }
 
     public function updateProfile(array $data)

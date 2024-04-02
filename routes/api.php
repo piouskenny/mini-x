@@ -18,5 +18,6 @@ Route::prefix('/v1/users')->group(
     function () {
         Route::post('/signup', [\App\Http\Controllers\Api\V1\User\AuthController::class, 'signup']);
         Route::post('/verify.email', [\App\Http\Controllers\Api\V1\User\AuthController::class, 'verifyEmail']);
+        Route::post('/login', [\App\Http\Controllers\Api\V1\User\AuthController::class, 'login']);
     }
 );
