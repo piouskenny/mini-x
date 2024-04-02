@@ -2,12 +2,13 @@
 
 namespace App\Repositories\V1;
 
+use App\Models\OTP;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\Contracts\HasApiTokens;
 use Illuminate\Http\Request;
 use App\Interfaces\V1\UserRepositoryInterface;
-
+use App\Classes\EmailClass;
 class UserRepository implements UserRepositoryInterface
 {
 
@@ -16,7 +17,27 @@ class UserRepository implements UserRepositoryInterface
      */
     public function signup(array $data)
     {
-        return User::create($data);
+        $user = User::create($data);
+
+        /**
+         * Create OTP for user
+         */
+        $otp = rand(1000, 9999);
+
+        OTP::create([
+            'user_id' => $user->id,
+            'otp' => $otp,
+        ]);
+
+        /**
+         * Send otp to user email
+         */
+        try {
+            $emailClass = new EmailClass($otp,$user->email);
+        } catch (\Exception $e) {
+            return false;
+        }
+        return $user;
     }
 
     public function verifyEmail(array $data)

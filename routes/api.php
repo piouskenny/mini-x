@@ -13,17 +13,10 @@ Route::get('/v1', function () {
 });
 
 /**
- * User Authencication Endpoints
+ * User Authentication Endpoints
  */
-Route::prefix('/v1/user')->group(
+Route::prefix('/v1/users')->group(
     function () {
         Route::post('/signup', [\App\Http\Controllers\Api\V1\User\AuthController::class, 'signup']);
     }
 );
-
-//Route::prefix('/v1/user')->middleware('auth:sanctum')->group(
-//    function () {
-//        Route::get('/{$id}');
-//
-//    }
-//);

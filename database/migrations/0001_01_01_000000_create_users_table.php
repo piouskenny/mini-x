@@ -17,8 +17,9 @@ return new class extends Migration
             $table->string('username')->unique();
             $table->bigInteger('followers')->nullable()->default(0);
             $table->bigInteger('posts')->nullable()->default(0);
-            $table->string('email')->unique()->nullable();
+            $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
+            $table->boolean('verificationStatus')->default(false);
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
