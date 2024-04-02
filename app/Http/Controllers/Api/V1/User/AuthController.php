@@ -68,6 +68,7 @@ class AuthController extends Controller
         DB::beginTransaction();
         try {
             $login = $this->userRepositoryInterface->login($userDetails);
+
             DB::commit();
             return ApiResponseClass::sendResponse(new UserResource($login), 'User logged in successfully', 201 );
         } catch (\Exception $e) {

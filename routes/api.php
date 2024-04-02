@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\V1\User\AuthController;
+use App\Http\Controllers\Api\V1\User\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,8 +18,14 @@ Route::get('/v1', function () {
  */
 Route::prefix('/v1/users')->group(
     function () {
-        Route::post('/signup', [\App\Http\Controllers\Api\V1\User\AuthController::class, 'signup']);
-        Route::post('/verify.email', [\App\Http\Controllers\Api\V1\User\AuthController::class, 'verifyEmail']);
-        Route::post('/login', [\App\Http\Controllers\Api\V1\User\AuthController::class, 'login']);
+        Route::post('/signup', [AuthController::class, 'signup']);
+        Route::post('/verify.email', [AuthController::class, 'verifyEmail']);
+        Route::post('/login', [AuthController::class, 'login']);
+
+        Route::middleware('auth:sanctum')->group(
+            function() {
+                Route::post('/update.profile/{id}', [ProfileController::class, 'updateProfile']);
+            }
+        );
     }
 );

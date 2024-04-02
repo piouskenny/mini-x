@@ -43,6 +43,7 @@ class UserRepository implements UserRepositoryInterface
         return $user;
     }
 
+
     public function verifyEmail(int $user_id, int $otp)
     {
         $user = User::find($user_id)->first();
@@ -87,8 +88,10 @@ class UserRepository implements UserRepositoryInterface
 
     public function updateProfile(array $data)
     {
-        $user = User::findOrFail($data->id);
-        $user->update($data);
+        $user = User::findOrFail($data['id']);
+        $user->update([
+            'name' => $data['name']
+        ]);
         return $user;
     }
 
