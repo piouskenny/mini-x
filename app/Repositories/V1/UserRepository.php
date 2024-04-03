@@ -15,6 +15,13 @@ use App\Classes\EmailClass;
 class UserRepository implements UserRepositoryInterface
 {
 
+    protected string $token;
+
+    public function __construct()
+    {
+        $this->token =  request()->bearerToken();
+    }
+
     /**
      * Create a new class instance.
      */
@@ -71,7 +78,8 @@ class UserRepository implements UserRepositoryInterface
         return false;
     }
 
-    public function login(array $data)
+    public function
+    login(array $data)
     {
 
         if (Auth::attempt(['email' => $data['email'], 'password' => $data['password']])) {
@@ -92,6 +100,8 @@ class UserRepository implements UserRepositoryInterface
         $user->update([
             'name' => $data['name']
         ]);
+
+        $user['token'] = $this->token;
         return $user;
     }
 
