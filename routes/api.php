@@ -25,6 +25,7 @@ Route::prefix('/v1/users')->group(
         Route::middleware('auth:sanctum')->group(
             function() {
                 Route::post('/update.profile/{id}', [ProfileController::class, 'updateProfile']);
+                Route::get('/view.profile/{id}', [ProfileController::class, 'viewProfile']);
             }
         );
     }
