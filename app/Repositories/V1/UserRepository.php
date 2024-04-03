@@ -107,6 +107,9 @@ class UserRepository implements UserRepositoryInterface
 
     public function viewProfile($id)
     {
-        return User::findOrFail($id);
+        $user = User::findOrFail($id)->first();
+
+        $user['token'] = $this->token;
+        return $user;
     }
 }

@@ -26,7 +26,6 @@ class ProfileController extends Controller
             'id' => $id,
             'name' => $request->name,
         ];
-
         DB::beginTransaction();
 
         try {
@@ -38,6 +37,23 @@ class ProfileController extends Controller
             report($e);
 
             return ApiResponseClass::rollback($e, "Opps sorry, something went wrong");
+        }
+    }
+
+
+    public function viewProfile($id)
+    {
+        DB::beginTransaction();
+
+        try {
+            $userProfile = $this->userRepositoryInterface->viewProfile($id);
+            DB::commit();
+
+            return ApiResponseClass::sendResponse(new ApiResponseClass($userProfile), "User Profile", 201);
+        } catch (\Exception $e) {
+            report($e);
+
+            return ApiResponseClass::rollback($e, "Something went wrong");
         }
     }
 }
