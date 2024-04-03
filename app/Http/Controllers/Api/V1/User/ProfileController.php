@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\User;
 
 use App\Classes\ApiResponseClass;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\V1\UserProfileResource;
 use App\Http\Resources\V1\UserResource;
 use App\Interfaces\V1\UserRepositoryInterface;
 use Illuminate\Http\Request;
@@ -49,7 +50,7 @@ class ProfileController extends Controller
             $userProfile = $this->userRepositoryInterface->viewProfile($id);
             DB::commit();
 
-            return ApiResponseClass::sendResponse(new ApiResponseClass($userProfile), "User Profile", 201);
+            return ApiResponseClass::sendResponse(new UserProfileResource($userProfile), "User Profile", 201);
         } catch (\Exception $e) {
             report($e);
 
