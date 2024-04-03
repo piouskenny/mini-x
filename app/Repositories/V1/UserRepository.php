@@ -2,6 +2,7 @@
 
 namespace App\Repositories\V1;
 
+use App\Classes\ApiResponseClass;
 use App\Models\OTP;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -9,8 +10,17 @@ use Laravel\Sanctum\Contracts\HasApiTokens;
 use Illuminate\Http\Request;
 use App\Interfaces\V1\UserRepositoryInterface;
 use App\Classes\EmailClass;
+
+
 class UserRepository implements UserRepositoryInterface
 {
+
+    protected string $token;
+
+    public function __construct()
+    {
+        $this->token =  request()->bearerToken();
+    }
 
     /**
      * Create a new class instance.
@@ -40,40 +50,67 @@ class UserRepository implements UserRepositoryInterface
         return $user;
     }
 
-    public function verifyEmail(array $data)
+
+    public function verifyEmail(int $user_id, int $otp)
     {
-        $user = User::find($data->id);
+        $user = User::find($user_id)->first();
 
         if ($user) {
+
             /**
-             * Update the user's email_verified_at timestamp
+             * Check if the OTP matches the user OTP in the OTP table
              * */
-            $user->email_verified_at = now();
-            $user->save();
-            return true;
+            $storedOTP = OTP::where('user_id', $user_id)->first();
+
+
+            if($storedOTP->otp !== $otp) {
+               return false;
+            }
+
+            $storedOTP->delete();
+
+            $user->update([
+                'verificationStatus' => true
+            ]);
+
+            return $user;
+         }
+        return false;
+    }
+
+    public function
+    login(array $data)
+    {
+
+        if (Auth::attempt(['email' => $data['email'], 'password' => $data['password']])) {
+            $user = Auth::user();
+
+
+            $token = $user->createToken('Token')->plainTextToken;
+            $user['token'] = $token;
+
+            return $user;
         }
         return false;
     }
 
-    public function login(array $data)
-    {
-        if (Auth::attempt(['email' => $data['email'], 'password' => $data['password']])) {
-            $user = Auth::user();
-            $token = $user->createToken('Token')->plainTextToken;
-            return ['token' => $token];
-        }
-        return ['error' => 'Unauthorized'];
-    }
-
     public function updateProfile(array $data)
     {
-        $user = User::findOrFail($data->id);
-        $user->update($data);
+        $user = User::findOrFail($data['id']);
+        $user->update([
+            'name' => $data['name']
+        ]);
+
+        $user['token'] = $this->token;
         return $user;
     }
 
     public function viewProfile($id)
     {
-        return User::findOrFail($id);
+        $user = User::findOrFail($id);
+
+        $user['token'] = $this->token;
+
+        return $user;
     }
 }

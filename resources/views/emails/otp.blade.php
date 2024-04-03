@@ -10,6 +10,11 @@
     </style>
 </head>
 <body class="bg-gray-100">
+<div class="bg-blue-500 text-white">
+    <h1 class="text-center">
+        MINI - X
+    </h1>
+</div>
 <div class="max-w-xl mx-auto p-4 bg-white rounded-lg shadow-lg">
     <div>
         {{$body}}

@@ -6,10 +6,7 @@ interface UserRepositoryInterface
 {
     public function signup(array $data);
 
-    /**
-     * This receives the user Id and the OTP
-     */
-    public function verifyEmail(array $data);
+    public function verifyEmail(int $user_id, int $otp);
 
     public function login(array $data);
 
