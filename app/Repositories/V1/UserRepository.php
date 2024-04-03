@@ -78,8 +78,7 @@ class UserRepository implements UserRepositoryInterface
         return false;
     }
 
-    public function
-    login(array $data)
+    public function login(array $data)
     {
 
         if (Auth::attempt(['email' => $data['email'], 'password' => $data['password']])) {
@@ -97,6 +96,7 @@ class UserRepository implements UserRepositoryInterface
     public function updateProfile(array $data)
     {
         $user = User::findOrFail($data['id']);
+
         $user->update([
             'name' => $data['name']
         ]);
