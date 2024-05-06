@@ -14,17 +14,19 @@ Route::get('/v1', function () {
     return \App\Classes\ApiResponseClass::sendResponse(null, "Welcome to Mini X", 201);
 });
 
-
 /**
  * Fall back Route that will display all posts
  */
-//Route::fallback(PostController::class, 'all')->middleware('auth:sanctum');
+Route::fallback(function () {
+    return redirect()->route('allPost');
+})->middleware('auth:sanctum');
 
 
 /**
  * Version 1 Route
  */
 Route::prefix('/v1')->group(
+
     function () {
         /**
          * User Authentication Endpoints
@@ -49,7 +51,10 @@ Route::prefix('/v1')->group(
          */
         Route::prefix('/posts')->middleware('auth:sanctum')->group(
             function () {
-                Route::get('/', [PostController::class, 'all']);
+                Route::get('/', [PostController::class, 'all'])->name('allPost');
+                Route::post('/create/{id}', [PostController::class, 'create']);
+                Route::post('/edit/{post_id}', [PostController::class, 'edit']);
+                Route::delete('/delete/{id}', [PostController::class, 'edit']);
             }
         );
     }

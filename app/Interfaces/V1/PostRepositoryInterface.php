@@ -12,3 +12,4 @@ interface PostRepositoryInterface
 
     public function delete($id);
 }
+

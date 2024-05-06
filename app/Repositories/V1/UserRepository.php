@@ -15,11 +15,11 @@ use App\Classes\EmailClass;
 class UserRepository implements UserRepositoryInterface
 {
 
-    protected string $token;
+    private string $token;
 
     public function __construct()
     {
-        $this->token =  request()->bearerToken();
+        $this->token =  request()->bearerToken() ?? "";
     }
 
     /**
@@ -53,7 +53,7 @@ class UserRepository implements UserRepositoryInterface
 
     public function verifyEmail(int $user_id, int $otp)
     {
-        $user = User::find($user_id)->first();
+        $user = User::find($user_id);
 
         if ($user) {
 
