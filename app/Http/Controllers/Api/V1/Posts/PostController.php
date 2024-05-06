@@ -26,7 +26,7 @@ class PostController extends Controller
         try {
             $posts  = $this->postRepositoryInterface->all();
             return ApiResponseClass::sendResponse(PostResource::collection($posts), 'all posts', 201);
-         } catch(\Exception $e) {
+        } catch (\Exception $e) {
             report($e);
             return ApiResponseClass::rollback($e, "Opps!!! something went wrong");
         }
@@ -59,7 +59,7 @@ class PostController extends Controller
             'content' => $request->content
         ];
 
-    DB::beginTransaction();
+        DB::beginTransaction();
         try {
             $edit = $this->postRepositoryInterface->edit($postDetails);
             DB::commit();
@@ -70,8 +70,16 @@ class PostController extends Controller
         }
     }
 
-    public function delete()
+    public function delete($post_id)
     {
+        DB::beginTransaction();
 
+        try {
+            $delete = $this->postRepositoryInterface->delete($post_id);
+            DB::commit();
+            return ApiResponseClass::sendResponse($delete, 'Post deleted successfully', 201);
+        } catch (\Exception $e) {
+            return ApiResponseClass::rollback($e, 'Unable to delete Post now, try again later');
+        }
     }
 }

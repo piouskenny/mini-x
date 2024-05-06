@@ -54,7 +54,7 @@ Route::prefix('/v1')->group(
                 Route::get('/', [PostController::class, 'all'])->name('allPost');
                 Route::post('/create/{id}', [PostController::class, 'create']);
                 Route::post('/edit/{post_id}', [PostController::class, 'edit']);
-                Route::delete('/delete/{id}', [PostController::class, 'edit']);
+                Route::delete('/delete/{post_id}', [PostController::class, 'delete']);
             }
         );
     }

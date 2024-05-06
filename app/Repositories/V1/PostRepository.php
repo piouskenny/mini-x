@@ -13,7 +13,7 @@ class PostRepository implements PostRepositoryInterface
     {
         $post = Post::paginate(20);
 
-//        return PostResource::collection($post);
+        // return PostResource::collection($post);
         return $post;
     }
 
@@ -30,10 +30,10 @@ class PostRepository implements PostRepositoryInterface
 
         $user_details = Auth::user();
 
-//  check if it was the user that actually created the post
-    if ($post->user_id != $user_details['id'] ) {
-        return false;
-    }
+        //  check if it was the user that actually created the post
+        if ($post->user_id != $user_details['id']) {
+            return false;
+        }
         $post->update($data);
 
         return $post;
